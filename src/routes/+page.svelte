@@ -1,12 +1,22 @@
 <script>
+
+
   import { goto } from '$app/navigation';
-
-  function navigate() {
-    goto('/FormComponent');
+  import { base } from '$app/paths';
+  
+  function prependBase(url) {
+    if (!url.startsWith('http') && !url.startsWith('https') && !url.startsWith(base)) {
+      return `${base}${url}`;
+    }
+    return url;
   }
-</script>
-
-<section class="section">
+  
+  function navigate() {
+    goto(prependBase('/FormComponent'));
+  }
+  </script>
+  
+  <section class="section">
   <div class="columns is-centered">
     <div class="column is-8">
       <div class="card">
@@ -21,8 +31,8 @@
             This page keeps an overview of active and historical flipstarters.
           </p>
           <p>Do you know of a flipstarter that is not listed here?</p>
-          <button class="button is-primary mt-3" on:click={navigate}>Submit a flipstarter</button>
-
+          <a  on:click="{navigate}" class="button is-primary mt-3">Submit a flipstarter</a>
+  
           <div class="mt-5">
             <p>
               So far, <strong>134 projects</strong> have been successfully
@@ -30,13 +40,12 @@
               <strong>15545.84 BCH</strong>.
             </p>
           </div>
-
+  
           <div class="buttons mt-3">
-           <a href="https://flipstarter.cash/en/how-to-pledge"> <button class="button is-info mb-3">How to pledge</button></a>
-           
-          <a href="https://flipstarter.cash/en/how-to"><button class="button is-dark">Start a campaign</button></a>
+            <a href="https://flipstarter.cash/en/how-to-pledge" class="button is-info mb-3">How to pledge</a>
+            <a href="https://flipstarter.cash/en/how-to" class="button is-dark">Start a campaign</a>
           </div>
-
+  
           <p class="mt-3">
             A flipstarter listing is not an endorsement. Always do your own
             research before pledging.
@@ -45,10 +54,11 @@
       </div>
     </div>
   </div>
-</section>
-
-<style>
+  </section>
+  
+  <style>
   .buttons {
     display: block;
   }
-</style>
+  </style>
+  
