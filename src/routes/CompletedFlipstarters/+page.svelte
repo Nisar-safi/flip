@@ -61,15 +61,26 @@
                 <div class="card">
                   <div class="card-content">
                     <div class="content">
-                      <h1 class="title is-4 ml-3">
-                        <a
-                          href={prependBase(`/CompletedFlipstarters/${slugify(campaign.title)}`)}
-                          data-sveltekit-prefetch
-                        >
-                          <span class="icon"><i class="fas fa-fire mr-4"></i></span>
-                          {campaign.title.substring(0, 15)}
-                        </a>
-                      </h1>
+                      <div class="containerr">
+                        <div class="left_side">
+                          <span class="icon">
+                            <i class="fas fa-fire mr-1"></i>
+                          </span>
+                        </div>
+                        <div class="right_side">
+                          <h1 class="title is-4">
+                      
+                            <a
+                              href={prependBase(
+                                `/CompletedFlipstarters/${slugify(campaign.title)}`
+                              )}
+                            >
+                              
+                              {campaign.title}
+                            </a>
+                          </h1>
+                        </div>
+                      </div>
                       <p class="mt-1">
                         <strong>
                           <span class="icon"><i class="fas fa-coins"></i></span> Amount:
@@ -191,4 +202,24 @@
   .pagination-ellipsis {
     padding: 0.5em;
   }
+
+
+
+  .title.is-4 a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Ensure this matches the value in the script */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.containerr{
+
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+    margin-right: 0.5rem;
+  }
+  
 </style>

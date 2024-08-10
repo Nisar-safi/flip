@@ -17,9 +17,10 @@
                   >{campaign.title}
                 </h1>
                 <p>
-                  <strong>Status:</strong>
                   <span class="icon"><i class="fas fa-info-circle"></i></span
-                  >{campaign.status}
+                    >
+                  <strong>Status:</strong>
+                  {campaign.status}
                 </p>
                 <p>
                   <strong>Funded Transaction:</strong>
@@ -31,8 +32,9 @@
                   <span class="icon"><i class="fas fa-info"></i></span>Details
                 </h2>
                 <p>
+                    <span class="icon"><i class="fas fa-align-left"></i></span>
                   <strong>Description:</strong>
-                  <span class="icon"><i class="fas fa-align-left"></i></span>
+                
                   {campaign.description}
                 </p>
                 <p>
