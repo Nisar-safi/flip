@@ -3,15 +3,13 @@ import { json } from '@sveltejs/kit';
 
 export async function GET() {
     try {
-        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter-data-from-url/');
-        
-        // Check if the response is not OK (status code 200-299)
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+
         if (!response.ok) {
             console.error(`Error: ${response.status} ${response.statusText}`);
             return json({ error: `Failed to fetch data. Status: ${response.status}` }, { status: response.status });
         }
 
-        // Check the content type to ensure it's JSON
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             console.error('Error: Response is not JSON:', contentType);
@@ -20,7 +18,6 @@ export async function GET() {
             return json({ error: 'Response is not JSON' }, { status: 500 });
         }
 
-        // Parse the JSON data
         const data = await response.json();
         return json(data);
     } catch (error) {
@@ -29,13 +26,15 @@ export async function GET() {
     }
 }
 
-
-export async function POST({ request }) {
+export async function POST({ request, url }) {
+    const endpoint = url.pathname === '/api/flipstarter' 
+        ? 'https://flipbackend.bitcoincash.network/v1/flipstarter/'
+        : 'https://flipbackend.bitcoincash.network/v1/flipstarter-data-from-url/';
+    
     try {
         const formData = await request.json();
 
-        // Make a POST request to the backend API with the form data
-        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/', {
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -43,13 +42,11 @@ export async function POST({ request }) {
             body: JSON.stringify(formData)
         });
 
-        // Check if the response is not OK (status code 200-299)
         if (!response.ok) {
             console.error(`Error: ${response.status} ${response.statusText}`);
             return json({ error: `Failed to submit data. Status: ${response.status}` }, { status: response.status });
         }
 
-        // Check the content type to ensure it's JSON
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             console.error('Error: Response is not JSON:', contentType);
@@ -58,10 +55,7 @@ export async function POST({ request }) {
             return json({ error: 'Response from backend is not JSON' }, { status: 500 });
         }
 
-        // Parse the JSON response
         const data = await response.json();
-        
-        // Return the successful response from the backend
         return json({ success: true, data }, { status: 200 });
 
     } catch (error) {
