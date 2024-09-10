@@ -26,19 +26,16 @@
 		return campaigns.slice(start, end);
 	}
 
-	function getPaginatedItemsAgain(items,page) {
+	function getPaginatedItemsAgain(items, page) {
 		totalPages = Math.ceil(items.length / itemsPerPage);
 		const start = (page - 1) * itemsPerPage;
 		const end = start + itemsPerPage;
 		return items.slice(start, end);
 	}
 
-
-
 	// The campaigns to display on the current page
 	let paginatedCampaigns = getPaginatedItems(currentPage);
-	console.log(paginatedCampaigns," pages checking");
-	
+	console.log(paginatedCampaigns, " pages checking");
 
 	// Navigate to a specific page
 	function goToPage(page) {
@@ -55,10 +52,7 @@
 		return url;
 	}
 
-
-
-
-		import { createSearchStore, searchHandler } from "$lib/stores/search";
+	import { createSearchStore, searchHandler } from "$lib/stores/search";
 	import { onDestroy } from "svelte";
 
 	const searchCampaignsData = data.campaigns.map((campaign) => ({
@@ -67,12 +61,37 @@
 	}));
 	const searchStore = createSearchStore(searchCampaignsData);
 	const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
-	console.log(searchCampaignsData,  "search campaings data");
-	
+	console.log(searchCampaignsData, "search campaings data");
 
 	onDestroy(() => {
 		unsubscribe();
 	});
+
+	function getSnippet(campaign, search) {
+		const searchLower = search.toLowerCase();
+		const titleIndex = campaign.title.toLowerCase().indexOf(searchLower);
+		const descriptionIndex = campaign.description
+			.toLowerCase()
+			.indexOf(searchLower);
+
+		if (titleIndex !== -1) {
+			return null; // No need for a snippet if the search term is in the title
+		} else if (descriptionIndex !== -1) {
+			const snippetStart = Math.max(0, descriptionIndex - 20);
+			const snippetEnd = Math.min(
+				campaign.description.length,
+				descriptionIndex + search.length + 60
+			);
+			const snippet = campaign.description.slice(snippetStart, snippetEnd);
+			const highlightedSnippet = snippet.replace(
+				new RegExp(`(${search})`, "gi"),
+				"<mark>$1</mark>"
+			);
+			return `...${highlightedSnippet}...`;
+		} else {
+			return null;
+		}
+	}
 </script>
 
 <main>
@@ -85,69 +104,74 @@
 						<p>No campaigns available.</p>
 					</div>
 				{:else}
-					<div class="columns column is-8 ">
-							<div class="column is-8 is-offset-2">
-								<div class="container">
-									<h1 class="title has-text-centered mt-4">Quick Search</h1>
-									<div class="field has-addons">
-										<div class="control is-expanded">
-											<input
-												class="input"
-												type="text"
-												placeholder="Search..."
-												bind:value="{$searchStore.search}"
-											/>
-										</div>
+					<div class="columns column is-8">
+						<div class="column is-8 is-offset-2">
+							<div class="container">
+								<h1 class="title has-text-centered mt-4">Quick Search</h1>
+								<div class="field has-addons">
+									<div class="control is-expanded">
+										<input
+											class="input"
+											type="text"
+											placeholder="Search..."
+											bind:value="{$searchStore.search}"
+										/>
 									</div>
 								</div>
 							</div>
 						</div>
+					</div>
 
-						{#each getPaginatedItemsAgain($searchStore.filtered,currentPage) as campaign, index (campaign)}
-						{#if campaign.status === "success"}
-							<div class="column is-half">
-								<div class="card">
-									<div class="card-content">
-										<div class="content">
-											<div class="containerr">
-												<div class="left_side">
-													<span class="icon">
-														<i class="fas fa-fire mr-1"></i>
-													</span>
-												</div>
-												<div class="right_side">
-													<h1 class="title is-4">
-														<a
-															href="{prependBase(
-																`/CompletedFlipstarters/${slugify(campaign.title)}`
-															)}"
-														>
-															{campaign.title}
-														</a>
-													</h1>
-												</div>
+					{#each getPaginatedItemsAgain($searchStore.filtered, currentPage) as campaign, index (campaign)}
+						<!-- {#if campaign.status === "success"} -->
+						<div class="column is-half">
+							<div class="card">
+								<div class="card-content">
+									<div class="content">
+										<div class="containerr">
+											<div class="left_side">
+												<span class="icon">
+													<i class="fas fa-fire mr-1"></i>
+												</span>
 											</div>
-											<p class="mt-1">
-												<strong>
-													<span class="icon"><i class="fas fa-coins"></i></span>
-													Amount:
-												</strong>
-												{campaign.amount} BCH
-											</p>
-											<div class="container">
-												<div class="mb-3">
+											<div class="right_side">
+												<h1 class="title is-4">
+													<a
+														href="{prependBase(
+															`/CompletedFlipstarters/${slugify(campaign.title)}`
+														)}"
+													>
+														{campaign.title}
+													</a>
+												</h1>
+												{#if getSnippet(campaign, $searchStore.search)}
+													<p class="snippet">
+														{@html getSnippet(campaign, $searchStore.search)}
+													</p>
+												{/if}
+											</div>
+										</div>
+										<p class="mt-1">
+											<strong>
+												<span class="icon"><i class="fas fa-coins"></i></span>
+												Amount:
+											</strong>
+											{campaign.amount} BCH
+										</p>
+										<div class="container">
+											<div class="mb-3">
+												{#if $searchStore.search == ""}
 													<strong>
 														<span class="icon"
 															><i class="fas fa-hashtag"></i></span
 														> Index:
 													</strong>
-													<span class="ml-2"
-														>{(currentPage - 1) * itemsPerPage +
-															index +
-															1}</span
-													>
-												</div>
-												<!-- <p class="mt-3">
+													<span class="ml-2">
+														{(currentPage - 1) * itemsPerPage + index + 1}
+													</span>
+												{/if}
+											</div>
+											<!-- <p class="mt-3">
 													<strong>
 														<span class="icon"
 															><i class="fas fa-info-circle"></i></span
@@ -155,31 +179,27 @@
 													</strong>
 													<span class="ml-2">{campaign.status}</span>
 												</p> -->
-											</div>
+										</div>
 
-											<div class="is-flex mt-3">
-												<div>
-													<strong
-														><span class="icon"
-															><i class="fas fa-archive"></i></span
-														>Archive:</strong
-													>
-												</div>
-												{#each campaign.archive as archiv, index (archiv)}
-													<a
-														href="{archiv}"
-														class="is-link ml-2"
-														target="_blank"
-													>
-														#{index + 1}
-													</a>
-												{/each}
+										<div class="is-flex mt-3">
+											<div>
+												<strong
+													><span class="icon"
+														><i class="fas fa-archive"></i></span
+													>Archive:</strong
+												>
 											</div>
+											{#each campaign.archive as archiv, index (archiv)}
+												<a href="{archiv}" class="is-link ml-2" target="_blank">
+													#{index + 1}
+												</a>
+											{/each}
 										</div>
 									</div>
 								</div>
 							</div>
-						{/if}
+						</div>
+						<!-- {/if} -->
 					{/each}
 				{/if}
 			</div>
@@ -226,7 +246,7 @@
 						{/if}
 					{/each}
 					<!-- Ellipsis after current page if necessary -->
-					{#if currentPage < totalPages - 2}
+					{#if currentPage < totalPages - 6}
 						<li><span class="pagination-ellipsis">…</span></li>
 					{/if}
 					<!-- Last page button -->

@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
 	import { base } from "$app/paths";
 	export let data;
 	let { campaigns } = data;
@@ -30,9 +32,35 @@
 	onDestroy(() => {
 		unsubscribe();
 	});
+	function getSnippet(campaign, search) {
+		const searchLower = search.toLowerCase();
+		const titleIndex = campaign.title.toLowerCase().indexOf(searchLower);
+		const descriptionIndex = campaign.description
+			.toLowerCase()
+			.indexOf(searchLower);
+
+		if (titleIndex !== -1) {
+			return null; // No need for a snippet if the search term is in the title
+		} else if (descriptionIndex !== -1) {
+			const snippetStart = Math.max(0, descriptionIndex - 20);
+			const snippetEnd = Math.min(
+				campaign.description.length,
+				descriptionIndex + search.length + 60
+			);
+			const snippet = campaign.description.slice(snippetStart, snippetEnd);
+			const highlightedSnippet = snippet.replace(
+				new RegExp(`(${search})`, "gi"),
+				"<mark>$1</mark>"
+			);
+			return `...${highlightedSnippet}...`;
+		} else {
+			return null;
+		}
+	}
 </script>
 
 <main>
+	
 	<div class="container">
 		<section class="section mt-3">
 			<div class="container">
@@ -43,6 +71,7 @@
 							<p>No campaigns available.</p>
 						</div>
 					{:else}
+
 						<div class="columns column is-8">
 							<div class="column is-8 is-offset-2">
 								<div class="container">
@@ -60,6 +89,7 @@
 								</div>
 							</div>
 						</div>
+						
 
 						{#each $searchStore.filtered as campaign, index (campaign)}
 							{#if campaign.status === "running"}
@@ -83,6 +113,14 @@
 																{campaign.title}
 															</a>
 														</h1>
+														{#if getSnippet(campaign, $searchStore.search)}
+															<p class="snippet">
+																{@html getSnippet(
+																	campaign,
+																	$searchStore.search
+																)}
+															</p>
+														{/if}
 													</div>
 												</div>
 												<p>
@@ -95,15 +133,19 @@
 													<strong> {campaign.amount / 100000000} BCH</strong>
 												</p>
 												<div>
+													{#if $searchStore.search == ""}
 													<strong>
 														<span class="icon">
 															<i class="fas fa-hashtag"></i>
 														</span>
 														Index:
 													</strong>
-													{index}
+														{index}
+													{/if}
+													
 												</div>
 											</div>
+											
 											<div class="container">
 												<div class="is-flex mb-3">
 													<div>
@@ -124,6 +166,7 @@
 														</a>
 													{/each}
 												</div>
+												
 												<div class="is-flex">
 													<strong>
 														<span class="icon">
@@ -170,6 +213,25 @@
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+	.containerr {
+		display: flex;
+		align-items: center;
+	}
+	.snippet {
+		font-style: italic;
+		color: #666;
+		font-size: 0.875rem;
+		margin-top: 0.5rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.snippet mark {
+		background-color: yellow;
+		color: inherit;
 	}
 	.containerr {
 		display: flex;
