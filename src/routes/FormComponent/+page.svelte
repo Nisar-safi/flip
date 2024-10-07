@@ -74,9 +74,12 @@
 	async function handleReview() {
 		if (campaignData) {
 			try {
+				// Convert the displayed amount (in BCH) back to satoshis for sending to the backend
+				const amountInSatoshis = Math.round(amount * 100000000);
+
 				// Prepare the data with the updated values
 				const updatedCampaignData = {
-					amount,
+					amount: amountInSatoshis, // Send the amount in satoshis
 					title,
 					description,
 					url: campaignData.url,
