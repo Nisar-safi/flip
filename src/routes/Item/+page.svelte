@@ -45,13 +45,6 @@
 		}
 	}
 
-	function prependBase(url) {
-		if (!url.startsWith("http") && !url.startsWith(base)) {
-			return `${base}${url}`;
-		}
-		return url;
-	}
-
 	import { createSearchStore, searchHandler } from "$lib/stores/search";
 	import { onDestroy } from "svelte";
 
@@ -97,7 +90,7 @@
 <main>
 	<section class="section mt-3">
 		<div class="container">
-			<h1 class="title has-text-centered mt-4">Completed Flipstarters</h1>
+			<h1 class="title has-text-centered mt-4">Campaigns</h1>
 			<div class="columns is-centered is-multiline">
 				{#if paginatedCampaigns.length === 0}
 					<div class="column">
@@ -123,7 +116,6 @@
 					</div>
 
 					{#each getPaginatedItemsAgain($searchStore.filtered, currentPage) as campaign, index (campaign)}
-						<!-- {#if campaign.status === "success"} -->
 						<div class="column is-half">
 							<div class="card">
 								<div class="card-content">
@@ -137,9 +129,7 @@
 											<div class="right_side">
 												<h1 class="title is-4">
 													<a
-														href="{prependBase(
-															`/CompletedFlipstarters/${slugify(campaign.title)}`
-														)}"
+														href="{base}{`/Item/${slugify(campaign.title)}`}"
 													>
 														{campaign.title}
 													</a>
@@ -171,14 +161,6 @@
 													</span>
 												{/if}
 											</div>
-											<!-- <p class="mt-3">
-													<strong>
-														<span class="icon"
-															><i class="fas fa-info-circle"></i></span
-														> Status:
-													</strong>
-													<span class="ml-2">{campaign.status}</span>
-												</p> -->
 										</div>
 
 										<div class="is-flex mt-3">
@@ -199,7 +181,6 @@
 								</div>
 							</div>
 						</div>
-						<!-- {/if} -->
 					{/each}
 				{/if}
 			</div>
