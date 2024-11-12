@@ -35,8 +35,7 @@
 	}
 
 	// The campaigns to display on the current page
-$: paginatedCampaigns = getPaginatedItems(currentPage);
-	console.log(paginatedCampaigns, " pages checking");
+	$: paginatedCampaigns = getPaginatedItems(currentPage);
 
 	// Navigate to a specific page
 	function goToPage(page) {
@@ -46,17 +45,14 @@ $: paginatedCampaigns = getPaginatedItems(currentPage);
 		}
 	}
 
-
-
 	import { createSearchStore, searchHandler } from "$lib/stores/search";
 	import { onDestroy } from "svelte";
-$: searchCampaignsData = data.campaigns.map((campaign) => ({
+	$: searchCampaignsData = data.campaigns.map((campaign) => ({
 		...campaign,
 		searchTerms: `${campaign.title} ${campaign.description} ${campaign.category}`,
 	}));
 	$: searchStore = createSearchStore(searchCampaignsData);
 	$: unsubscribe = searchStore.subscribe((model) => searchHandler(model));
-	console.log(searchCampaignsData, "search campaings data");
 
 	onDestroy(() => {
 		unsubscribe();
@@ -131,11 +127,7 @@ $: searchCampaignsData = data.campaigns.map((campaign) => ({
 											</div>
 											<div class="right_side">
 												<h1 class="title is-4">
-													<a
-														href="{base}{(
-															`/Item/${slugify(campaign.title)}`
-														)}"
-													>
+													<a href="{base}{`/Item/${slugify(campaign.title)}`}">
 														{campaign.title}
 													</a>
 												</h1>
