@@ -12,7 +12,7 @@ export default {
 			precompress: false,
 		}),
 		paths: {
-			base: isDev ? "" : "/BuyAndSell",
+			base: isDev ? "" : "/dpractice",
 		},
 	},
 	preprocess: sveltePreprocess(),

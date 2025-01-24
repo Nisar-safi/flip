@@ -1,0 +1,26 @@
+{
+  "name": "Flipstarter",
+  "short_name": "Flipstarter",
+  "start_url": "/dpractice/",
+  "display": "standalone",
+  "background_color": "#17191c",
+  "theme_color": "#ff3f20",
+  "description": "This project provides an overview of active and historical Flipstarters, curated through a manual process due to the decentralized nature of Flipstarter. It is built using SvelteKit by Nisar and was directed and financed by @damascene. The concept is copied from the original deployment and enhanced to add campaign-specific pages and use static pages. This website, along with the collected Flipstarter data, is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3 (AGPLv3). The source code is available on [repository link].",
+  "icons": [
+    {
+      "src": "pwa-64x64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
