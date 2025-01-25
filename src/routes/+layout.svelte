@@ -2,7 +2,9 @@
   import "bulma/css/bulma.min.css";
   import "@fortawesome/fontawesome-free/css/all.min.css";
 import Navebar from "$lib/Components/Navebar.svelte";
+
 import { onMount } from "svelte";
+  
 let deferredPrompt;
 let showInstallButton = false;
 
@@ -36,6 +38,7 @@ async function installPWA() {
   </button>
 {/if}
 <Navebar />
+
 
 <slot></slot>
 

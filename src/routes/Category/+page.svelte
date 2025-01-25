@@ -2,7 +2,8 @@
 	import { base } from "$app/paths"; // Import the base path
 	export let data;
 
-	let { campaigns } = data;
+	$: ({ campaigns } = data); // this line
+	console.log("campaigns in svelete page:", data);
 
 	// targeting title for the next page
 	function slugify(text) {
@@ -17,7 +18,7 @@
 	const itemsPerPage = 5; // Set the number of items you want per page
 
 	// Calculate total pages
-	let totalPages = Math.ceil(campaigns.length / itemsPerPage);
+	$: totalPages = Math.ceil(campaigns.length / itemsPerPage);
 
 	// Get the items for the current page
 	function getPaginatedItems(page) {
@@ -34,8 +35,7 @@
 	}
 
 	// The campaigns to display on the current page
-	let paginatedCampaigns = getPaginatedItems(currentPage);
-	console.log(paginatedCampaigns, " pages checking");
+	$: paginatedCampaigns = getPaginatedItems(currentPage);
 
 	// Navigate to a specific page
 	function goToPage(page) {
@@ -45,23 +45,14 @@
 		}
 	}
 
-	function prependBase(url) {
-		if (!url.startsWith("http") && !url.startsWith(base)) {
-			return `${base}${url}`;
-		}
-		return url;
-	}
-
 	import { createSearchStore, searchHandler } from "$lib/stores/search";
 	import { onDestroy } from "svelte";
-
-	const searchCampaignsData = data.campaigns.map((campaign) => ({
+	$: searchCampaignsData = data.campaigns.map((campaign) => ({
 		...campaign,
 		searchTerms: `${campaign.title} ${campaign.description} ${campaign.category}`,
 	}));
-	const searchStore = createSearchStore(searchCampaignsData);
-	const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
-	console.log(searchCampaignsData, "search campaings data");
+	$: searchStore = createSearchStore(searchCampaignsData);
+	$: unsubscribe = searchStore.subscribe((model) => searchHandler(model));
 
 	onDestroy(() => {
 		unsubscribe();
