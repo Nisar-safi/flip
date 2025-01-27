@@ -1,6 +1,6 @@
 // [slug]/+page.js
 export async function load({ params }) {
-    const response = await fetch("https://flipbackend.bitcoincash.network/v1/flipstarter/?old");
+    const response = await fetch("https://flipbackend.bitcoincash.network/v1/flipstarter/");
     const data = await response.json();
     console.log('data is comming old',data);
     const campaign = data.find(campaign => slugify(campaign.title) === params.slug);

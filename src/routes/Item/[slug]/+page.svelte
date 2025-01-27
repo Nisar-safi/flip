@@ -18,7 +18,7 @@
               <strong
                 ><span class="icon"><i class="fas fa-coins"></i></span> Amount:</strong
               >
-              <strong> {campaign.amount} BCH</strong>
+              <strong> {(campaign.amount / 100000000).toFixed()} BCH</strong>
             </p>
             <p>
               <strong
@@ -31,10 +31,10 @@
               <strong
                 ><span class="icon"><i class="fas fa-tags"></i></span> Category:</strong
               >
-              {#each campaign.category as Categories}
+              {#each campaign.categories as category}
                 <span class="tag is-info m-1"
                   ><span class="icon"><i class="fas fa-tag"></i></span>
-                  {Categories}</span
+                  {category.name}</span
                 >
               {/each}
             </div>
@@ -45,46 +45,51 @@
               {campaign.status}
             </p>
             <p>
-              <strong><span class="icon"><i class="fas fa-handshake"></i></span> Transaction:</strong>
-              <a 
-                href={`https://explorer.bitcoin.com/bch/tx/${campaign.tx}`} 
+              <strong
+                ><span class="icon"><i class="fas fa-handshake"></i></span> Transaction:</strong
+              >
+              <a
+                href={`https://explorer.bitcoin.com/bch/tx/${campaign.funded_tx}`}
                 target="_blank"
                 class="transaction-link"
               >
-                {campaign.tx}
+                {campaign.funded_tx}
               </a>
             </p>
-            
+
             <p>
               <strong
                 ><span class="icon"><i class="fas fa-link"></i></span> URL:</strong
               > <a href={campaign.url} target="_blank">{campaign.url}</a>
             </p>
 
-            <div class="buttons mt-3" style="margin-bottom: 0.2rem; padding-bottom: 0rem">
+            <div
+              class="buttons mt-3"
+              style="margin-bottom: 0.2rem; padding-bottom: 0rem"
+            >
               <p>
                 <strong>
                   <span class="icon mr-1"><i class="fas fa-bullhorn"></i></span
                   >View Announcement:</strong
                 >
               </p>
-              {#each campaign.announcement as announcementt, index (announcementt)}
-                <a class=" mb-3" href={announcementt} target="_blank"
-                  >#{index+1}
+              {#each campaign.announcements as announcement, index (announcement)}
+                <a class=" mb-3" href={announcement.url} target="_blank"
+                  >#{index + 1}
                 </a>
               {/each}
             </div>
 
-            <div class="is-flex ">
+            <div class="is-flex">
               <div>
                 <strong
                   ><span class="icon"><i class="fas fa-archive"></i></span
                   >Archive:</strong
                 >
               </div>
-              {#each campaign.archive as archiv, index (archiv)}
-                <a href={archiv} class="is-link ml-2" target="_blank">
-                  #{index +1}
+              {#each campaign.archives as archive, index (archive)}
+                <a href={archive.url} class="is-link ml-2" target="_blank">
+                  #{index + 1}
                 </a>
               {/each}
             </div>
@@ -108,14 +113,9 @@
 
 <style>
   .icon {
-    margin-right: 0.5rem; 
+    margin-right: 0.5rem;
   }
   .transaction-link {
-  word-wrap: break-word; 
-  overflow-wrap: break-word; 
-  display: block; 
-  word-break: break-all; 
-}
-
-  
+    word-break: break-all;
+  }
 </style>
