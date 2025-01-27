@@ -45,15 +45,12 @@
               {campaign.status}
             </p>
             <p>
-              <strong>
-                <span class="icon">
-                  <i class="fas fa-handshake"></i>
-                </span> Transaction:
-              </strong>
-              <a
-                class="is-flex-wrap-wrap"
-                href={`https://explorer.bitcoin.com/bch/tx/${campaign.tx}`}
-                target="_blank">
+              <strong><span class="icon"><i class="fas fa-handshake"></i></span> Transaction:</strong>
+              <a 
+                href={`https://explorer.bitcoin.com/bch/tx/${campaign.tx}`} 
+                target="_blank"
+                class="transaction-link"
+              >
                 {campaign.tx}
               </a>
             </p>
@@ -111,7 +108,14 @@
 
 <style>
   .icon {
-    margin-right: 0.5rem; /* Adjust spacing as needed */
+    margin-right: 0.5rem; 
   }
+  .transaction-link {
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  display: block; 
+  word-break: break-all; 
+}
+
   
 </style>
