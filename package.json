@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "generate:routes": "node generateRoutes.js",
-    "build": "npm run generate:routes && vite build",
+    "build": "vite build",
     "dev": "vite dev",
     "dev:tauri": "tauri dev",
     "build:tauri": "tauri build",
@@ -27,6 +26,7 @@
     "@skeletonlabs/tw-plugin": "0.4.0",
     "@sveltejs/adapter-node": "^5.2.0",
     "@sveltejs/adapter-static": "^3.0.2",
+    "@sveltejs/adapter-vercel": "^5.6.1",
     "@sveltejs/vite-plugin-svelte": "3.1.1",
     "@tailwindcss/forms": "0.5.7",
     "@tailwindcss/typography": "0.5.13",

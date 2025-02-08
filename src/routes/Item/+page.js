@@ -1,23 +1,17 @@
-// src/routes/+page.js
-// @ts-ignore
-export  let load = async ({ fetch }) => {
-    const url = "https://flipbackend.bitcoincash.network/v1/flipstarter/?old";
+export const prerender = true;
+
+export let load = async ({ fetch }) => {
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
-      const campaigns = await response.json();
-      console.log("Fetched campaigns data CompletedFlipstarters sending data to +page.svelte:", campaigns); // Log the data
-      return {
-        campaigns
-      };
+        // Fetch the JSON file from the `static/` folder
+        const response = await fetch('/campaigns.json');
+        if (!response.ok) throw new Error("Failed to load campaigns.json");
+
+        const campaigns = await response.json();
+        console.log("Fetched campaigns data from JSON file:", campaigns);
+
+        return { campaigns };
     } catch (error) {
-      console.error("Error loading campaigns:", error);
-      return {
-        campaigns: [],
-        
-      };
+        console.error("Error fetching campaigns.json:", error);
+        return { campaigns: [] }; 
     }
-  }
-  
+};

@@ -143,7 +143,7 @@
 												<span class="icon"><i class="fas fa-coins"></i></span>
 												Amount:
 											</strong>
-											{campaign.amount} BCH
+											{(campaign.amount / 100000000).toFixed()} BCH
 										</p>
 										<div class="container">
 											<div class="mb-3">
@@ -170,18 +170,21 @@
 
 										<div class="is-flex mt-3">
 											<div>
-												<strong
-													><span class="icon"
-														><i class="fas fa-archive"></i></span
-													>Archive:</strong
-												>
+											  <strong>
+												<span class="icon"><i class="fas fa-archive"></i></span> Archive:
+											  </strong>
 											</div>
-											{#each campaign.archive as archiv, index (archiv)}
-												<a href="{archiv}" class="is-link ml-2" target="_blank">
-													#{index + 1}
+											{#if campaign.archive && campaign.archive.length > 0}
+											  {#each campaign.archive as archiv, index (archiv)}
+												<a href="{archiv.url}" class="is-link ml-2" target="_blank">
+												  #{index + 1}
 												</a>
-											{/each}
-										</div>
+											  {/each}
+											
+											  
+											{/if}
+										  </div>
+										  
 									</div>
 								</div>
 							</div>
