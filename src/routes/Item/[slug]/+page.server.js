@@ -1,17 +1,15 @@
-export const prerender = true;
-export async function load({ params, fetch }) {
+import fs from 'fs';
+
+export async function load({ params }) {
     console.log("Route parameters:", params);
 
-    // Fetch the JSON file from the `static/` folder
+    // Read the local JSON file
     let data = [];
     try {
-        const response = await fetch('/campaigns.json');
-        if (!response.ok) throw new Error("Failed to load campaigns.json");
-
-        data = await response.json();
-        console.log("Fetched campaigns data from JSON file:", data);
+        data = JSON.parse(fs.readFileSync('static/campaigns.json', 'utf8'));
+        console.log("Fetched campaigns data from local JSON file:", data);
     } catch (error) {
-        console.error("Error fetching campaigns.json:", error);
+        console.error("Error reading campaigns.json:", error);
         return { status: 500, error: new Error('Failed to load campaigns') };
     }
 

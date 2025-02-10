@@ -1,0 +1,72 @@
+import fs from 'fs/promises'; // Use async fs
+import fetch from 'node-fetch';
+
+async function generateRoutes() {
+  try {
+    // Fetch categories
+    const response = await fetch(
+      'https://flipbackend.bitcoincash.network/v1/flipstarter-category/'
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch categories: ${response.statusText}`);
+    }
+
+    let categories;
+    try {
+      categories = await response.json();
+    } catch (jsonError) {
+      throw new Error('Failed to parse API response as JSON.');
+    }
+
+    // Validate categories structure
+    if (!Array.isArray(categories)) {
+      throw new Error('Invalid categories structure received from API.');
+    }
+
+    // Generate category routes
+    const categoryRoutes = categories
+      .filter((category) => category.name)
+      .map((category) => `/Filter/${encodeURIComponent(category.name)}`);
+
+    // Generate filter amount routes from 1 to 1500 with step intervals
+    const filterAmountRoutes = [];
+    for (let min = 1; min <= 1001; min += 10) {
+      for (let max = min + 10; max <= 1001; max += 10) {
+        filterAmountRoutes.push(`/Filteramount/${min}/${max}`);
+      }
+    }
+
+    // Hardcoded navbar routes
+    const navbarRoutes = [
+      '/',
+      '/Category/running',
+      '/Category/success',
+      '/Category/expired',
+      '/Category',
+      '/AboutThisPage',
+    ];
+
+    // Combine all routes
+    const combinedRoutes = [
+        ...filterAmountRoutes,
+      ...categoryRoutes,
+    
+      ...navbarRoutes,
+    ];
+
+    // Write routes to JSON file
+    await fs.writeFile('./routes.json', JSON.stringify(combinedRoutes, null, 2));
+    console.log('Routes generated successfully.');
+  } catch (error) {
+    console.error('Error generating routes:', error.message);
+
+    // Log error to file for debugging
+    await fs.writeFile(
+      './routes.json',
+      JSON.stringify({ error: error.message }, null, 2)
+    );
+  }
+}
+
+generateRoutes();

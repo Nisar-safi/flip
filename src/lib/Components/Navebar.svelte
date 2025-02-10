@@ -1,69 +1,78 @@
 <script>
   import { base } from "$app/paths";
   import { goto } from "$app/navigation";
- 
+
   let isActive = false;
 
   const toggleMenu = () => {
     isActive = !isActive;
   };
 
-  const navigateTo = (url) => {
-    goto(`${base}${url}`);
+  const navigate = (event, path) => {
+    event.preventDefault(); // Prevent full page reload
+    goto(path);
   };
 </script>
 
 <!-- Navbar -->
 <nav class="navbar container">
   <div class="navbar-brand">
-    <a class="navbar-item" on:click={() => navigateTo("/")}> 
-      <h1 class="title is-4">Flipstarters</h1>
-    </a>
+    <div class="navbar-item">
+      <a href="{base}/" on:click={(e) => navigate(e, `${base}/`)}>
+        <h1 class="title is-4">Flipstarters</h1>
+      </a>
+    </div>
     <!-- Hamburger icon for small screens -->
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded={isActive} on:click={toggleMenu}>
+    <div role="button" class="navbar-burger" aria-label="menu" aria-expanded={isActive} on:click={toggleMenu}>
       {#if isActive}
         <i class="fas fa-times" aria-hidden="true"></i>
       {:else}
         <i class="fas fa-bars" aria-hidden="true"></i>
       {/if}
-    </a>
+    </div>
   </div>
 
   <!-- Navbar menu, toggled on small screens -->
   <div class={`navbar-menu ${isActive ? 'is-active' : ''}`}>
     <div class="navbar-end">
-    
-
       <!-- Other Navbar Items -->
-      <a class="navbar-item category-active" on:click={() => navigateTo("/Category/running")}>
-        <i class="fas fa-play-circle icon-active"></i>
-        <span>Active Flipstarters</span>
-      </a>
-      <a class="navbar-item category-completed" on:click={() => navigateTo("/Category/success")}>
-        <i class="fas fa-check-circle icon-completed"></i>
-        <span>Completed Flipstarters</span>
-      </a>
-      <a class="navbar-item category-expired" on:click={() => navigateTo("/Category/expired")}>
-        <i class="fas fa-times-circle icon-expired"></i>
-        <span>Expired Flipstarters</span>
-      </a>
-      
-      <a class="navbar-item category-all" on:click={() => navigateTo("/Category")}>  
-        <i class="fas fa-th-list icon-all"></i>
-        <span>All Flipstarters</span>
-      </a>
-      <a class="navbar-item category-about" on:click={() => navigateTo("/AboutThisPage")}>
-        <i class="fas fa-info-circle icon-about"></i>
-        <span>About This Page</span>
-      </a>
+      <div class="navbar-item category-active">
+        <a href="{base}/Category/running" on:click={(e) => navigate(e, `${base}/Category/running`)}>
+          <i class="fas fa-play-circle icon-active"></i>
+          <span>Active Flipstarters</span>
+        </a>
+      </div>
+      <div class="navbar-item category-completed">
+        <a href="{base}/Category/success" on:click={(e) => navigate(e, `${base}/Category/success`)}>
+          <i class="fas fa-check-circle icon-completed"></i>
+          <span>Completed Flipstarters</span>
+        </a>
+      </div>
+      <div class="navbar-item category-expired">
+        <a href="{base}/Category/expired" on:click={(e) => navigate(e, `${base}/Category/expired`)}>
+          <i class="fas fa-times-circle icon-expired"></i>
+          <span>Expired Flipstarters</span>
+        </a>
+      </div>
+      <div class="navbar-item category-all">
+        <a href="{base}/Category" on:click={(e) => navigate(e, `${base}/Category`)}>
+          <i class="fas fa-th-list icon-all"></i>
+          <span>All Flipstarters</span>
+        </a>
+      </div>
+      <div class="navbar-item category-about">
+        <a href="{base}/AboutThisPage" on:click={(e) => navigate(e, `${base}/AboutThisPage`)}>
+          <i class="fas fa-info-circle icon-about"></i>
+          <span>About This Page</span>
+        </a>
+      </div>
     </div>
   </div>
 </nav>
 
 
-<style>
- 
 
+<style>
  .navbar {
   padding: 1rem;
   background: transparent;
@@ -129,8 +138,6 @@
   font-size: 2rem;
 }
 
-
-
 @media screen and (max-width: 768px) {
   .navbar-item {
     font-size: 14px;
@@ -158,4 +165,3 @@
   }
 }
 </style>
-

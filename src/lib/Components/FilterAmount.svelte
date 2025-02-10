@@ -83,6 +83,7 @@
     </div>
 
     <button class="button is-primary" on:click={applyFilter}>Go</button>
+   
 </div>
 
 <style>

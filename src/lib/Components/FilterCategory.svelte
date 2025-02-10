@@ -112,7 +112,9 @@
       </button>
     {/each}
   </div>
-
+  {#each categoryColors as { category }}
+    <a  href="{base}/Filter/{encodeURIComponent(category)}"></a>
+  {/each}
   {#if campaignCategories.length > 8}
     <button on:click={toggleShowAll} class="button is-rounded see-more-btn">
       {showAll ? "See Less" : "See More"}
@@ -124,10 +126,12 @@
       on:click={applyFilter}
       disabled={selectedCategories.length === 0}
       class="button is-primary is-rounded apply-btn"
+      
     >
       Apply Filter
     </button>
-
+  
+  
     <button
       on:click={clearSelection}
       disabled={selectedCategories.length === 0}
