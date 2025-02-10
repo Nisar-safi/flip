@@ -1,16 +1,17 @@
-import fs from 'fs';
-
-export let load = async () => {
-    const filePath = 'static/campaigns.json';
-
+export let load = async ({ fetch }) => {
     try {
-        // Read the local JSON file
-        const campaigns = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        console.log("Fetched campaigns data from local JSON file:", campaigns);
+        // Fetch campaigns data from the API
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        }
+
+        const campaigns = await response.json();
+        console.log("Fetched campaigns data from API:", campaigns);
 
         return { campaigns };
     } catch (error) {
-        console.error("Error reading campaigns.json:", error);
+        console.error("Error fetching campaigns:", error);
         return { campaigns: [] }; 
     }
 };

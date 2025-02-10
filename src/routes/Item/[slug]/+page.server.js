@@ -1,26 +1,28 @@
-import fs from 'fs';
-
-export async function load({ params }) {
+export async function load({ params, fetch }) {
     console.log("Route parameters:", params);
 
-    // Read the local JSON file
-    let data = [];
     try {
-        data = JSON.parse(fs.readFileSync('static/campaigns.json', 'utf8'));
-        console.log("Fetched campaigns data from local JSON file:", data);
+        // Fetch campaigns data from the API
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched campaigns data from API:", data);
+
+        // Find the campaign that matches the slug
+        const campaign = data.find(campaign => slugify(campaign.title) === params.slug);
+
+        if (!campaign) {
+            return { status: 404, error: new Error('Not found') };
+        }
+
+        return { campaign };
     } catch (error) {
-        console.error("Error reading campaigns.json:", error);
+        console.error("Error fetching or processing campaigns:", error);
         return { status: 500, error: new Error('Failed to load campaigns') };
     }
-
-    // Find the campaign that matches the slug
-    const campaign = data.find(campaign => slugify(campaign.title) === params.slug);
-
-    if (!campaign) {
-        return { status: 404, error: new Error('Not found') };
-    }
-
-    return { campaign };
 }
 
 // Slugify function to convert campaign titles to URL-friendly slugs

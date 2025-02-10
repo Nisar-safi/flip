@@ -1,6 +1,4 @@
-import fs from 'fs';
-
-export async function load({ params }) {
+export async function load({ params, fetch }) {
     console.log("Route parameters:", params);
 
     const { minAmount, maxAmount } = params;
@@ -19,8 +17,14 @@ export async function load({ params }) {
     }
 
     try {
-        // **Read campaigns from local JSON file**
-        const data = JSON.parse(fs.readFileSync('static/campaigns.json', 'utf8'));
+        // **Fetch campaigns data from the API**
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched campaigns data from API:", data);
 
         // **Filter the campaigns based on amount**
         const campaigns = data.filter(
@@ -29,7 +33,7 @@ export async function load({ params }) {
 
         return { campaigns };
     } catch (error) {
-        console.error("Error reading campaigns.json:", error);
+        console.error("Error fetching or processing campaigns:", error);
         return { campaigns: [] };
     }
 }

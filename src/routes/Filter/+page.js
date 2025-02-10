@@ -1,7 +1,7 @@
 // src/routes/+page.js
 // @ts-ignore
 export  let load = async ({ fetch }) => {
-    const url = "https://flipbackend.bitcoincash.network/v1/flipstarter/?old";
+    const url = "https://flipbackend.bitcoincash.network/v1/flipstarter/";
     try {
       const response = await fetch(url);
       if (!response.ok) {

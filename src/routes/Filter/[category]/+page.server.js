@@ -1,8 +1,4 @@
-import fs from 'fs';
-
-
-
-export const load = async ({ params }) => {
+export const load = async ({ params, fetch }) => {
     console.log("Route parameters:", params);
 
     // Check if category parameter is available
@@ -11,24 +7,15 @@ export const load = async ({ params }) => {
         return { campaigns: [] };
     }
 
-    // Function to read local JSON file
-    const readLocalJson = () => {
-        console.log("Attempting to read campaigns from local JSON file...");
-        try {
-            const data = JSON.parse(fs.readFileSync('static/campaigns.json', 'utf8'));
-            console.log("Fetched campaigns data from local JSON file:", data);
-            return data;
-        } catch (error) {
-            console.error("Error reading local JSON file:", error);
-            return [];
-        }
-    };
-
     try {
-        let allProducts = [];
+        // Fetch campaigns data from the API
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        }
 
-        // Read campaigns data from the local JSON file
-        allProducts = readLocalJson();
+        let allProducts = await response.json();
+        console.log("Fetched campaigns data from API:", allProducts);
 
         // Clean up the category filter and convert to an array
         const categories = params.category
@@ -45,13 +32,9 @@ export const load = async ({ params }) => {
         );
         console.log("Filtered campaigns by categories:", campaigns);
 
-        return {
-            campaigns,
-        };
+        return { campaigns };
     } catch (error) {
-        console.error("Error processing campaigns:", error);
-        return {
-            campaigns: [], // Return an empty array in case of error
-        };
+        console.error("Error fetching or processing campaigns:", error);
+        return { campaigns: [] }; // Return an empty array in case of error
     }
 };

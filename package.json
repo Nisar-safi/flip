@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prebuild": "node fetchData.js",
+   
     "generate-sitemap": "node scripts/generate-sitemap.js",
     "build": "npm run generate-sitemap && vite build",
     "dev": "vite dev",
