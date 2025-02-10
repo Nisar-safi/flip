@@ -1,19 +1,7 @@
-import sveltePreprocess from "svelte-preprocess";
-import adapter from "@sveltejs/adapter-vercel";
-
-const isDev = process.env.NODE_ENV === "development";
+import adapter from '@sveltejs/adapter-vercel';
 
 export default {
-	kit: {
-		adapter: adapter({
-			pages: "build",
-			assets: "build",
-			fallback: undefined,
-			precompress: false,
-		}),
-		paths: {
-			base: isDev ? "" : "/dpractice",
-		},
-	},
-	preprocess: sveltePreprocess(),
+  kit: {
+    adapter: adapter()
+  }
 };
