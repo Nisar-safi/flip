@@ -1,6 +1,4 @@
-import fs from 'fs';
-
-export const load = async ({ params }) => {
+export const load = async ({ params, fetch }) => {
     console.log("Route parameters:", params);
 
     if (!params.status) {
@@ -8,9 +6,14 @@ export const load = async ({ params }) => {
     }
 
     try {
-        // Read the local JSON file
-        const allProducts = JSON.parse(fs.readFileSync('static/campaigns.json', 'utf8'));
-        console.log("Fetched campaigns data from local JSON file:", allProducts);
+        // Fetch data from the API
+        const response = await fetch('https://flipbackend.bitcoincash.network/v1/flipstarter/');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+        }
+
+        const allProducts = await response.json();
+        console.log("Fetched campaigns data from API:", allProducts);
 
         // Log available status values in the fetched data
         const availableStatuses = [...new Set(allProducts.map((product) => product.status))];
@@ -26,7 +29,7 @@ export const load = async ({ params }) => {
 
         return { campaigns };
     } catch (error) {
-        console.error("Error reading or processing campaigns.json:", error);
+        console.error("Error fetching or processing campaigns data:", error);
         return { campaigns: [] }; 
     }
 };
