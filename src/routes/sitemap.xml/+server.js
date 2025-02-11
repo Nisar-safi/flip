@@ -3,6 +3,9 @@ export async function GET() {
     const productsApiUrl = 'https://flipbackend.bitcoincash.network/v1/flipstarter/';
     const categoriesApiUrl = 'https://flipbackend.bitcoincash.network/v1/flipstarter-category/';
 
+    /**
+     * Fetch data from API and handle errors.
+     */
     const fetchData = async (url) => {
         try {
             const response = await fetch(url);
@@ -14,8 +17,24 @@ export async function GET() {
         }
     };
 
-    const slugify = (text) =>
-        text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    /**
+     * Convert text to a URL-friendly slug.
+     */
+    
+function slugify(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+    /**
+     * Escape special XML characters.
+     */
+    const escapeXml = (unsafe) =>
+        unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
 
     const [products, categories] = await Promise.all([
         fetchData(productsApiUrl),
@@ -63,13 +82,16 @@ export async function GET() {
         ...additionalCategoryUrls,
     ];
 
+    /**
+     * Generate sitemap XML string.
+     */
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${allUrls
         .map(
             (entry) => `
     <url>
-        <loc>${baseUrl}${entry.url}</loc>
+        <loc>${escapeXml(baseUrl + entry.url)}</loc>
         <priority>${entry.priority}</priority>
         <changefreq>${entry.changefreq}</changefreq>
         <lastmod>${entry.lastmod}</lastmod>
