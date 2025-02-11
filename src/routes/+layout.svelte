@@ -39,7 +39,8 @@ async function installPWA() {
 {/if}
 <Navebar />
 <svelte:head>
-    <meta name="google-site-verification" content="cOAZIAfTdhCTXc2Jb3rJYAbdd1OGCuG_K4W6iyru_dU" />
+   
+    <meta name="google-site-verification" content="GmWoMy3bW6vEu2lRqikP1Hpa1OqjNKL2RKBIPbZANXY" />
 </svelte:head>
 
 
