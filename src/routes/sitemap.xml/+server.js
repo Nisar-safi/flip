@@ -1,5 +1,5 @@
 export async function GET() {
-    const baseUrl = 'https://flip-neon-two.vercel.app/';
+    const baseUrl = 'https://flip-neon-two.vercel.app';
     const productsApiUrl = 'https://flipbackend.bitcoincash.network/v1/flipstarter/';
     const categoriesApiUrl = 'https://flipbackend.bitcoincash.network/v1/flipstarter-category/';
 
